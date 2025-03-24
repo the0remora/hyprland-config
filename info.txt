@@ -12,3 +12,4 @@ For Flatpak apps (like Firefox or Steam), ensure Wayland support:
 flatpak override --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.firefox
 flatpak override --socket=wayland --env=QT_QPA_PLATFORM=wayland org.kde.krita
 
+bash <(curl -sL https://raw.githubusercontent.com/the0remora/hyprland-dotfiles/main/install.sh)
