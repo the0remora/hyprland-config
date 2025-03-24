@@ -1,0 +1,14 @@
+Additional Packages to Install
+
+Since you're on Arch Linux, install these dependencies:
+
+yay -S hyprland waybar foot rofi pavucontrol blueman swayidle swaylock wl-clipboard xdg-desktop-portal-hyprland hyprshade
+
+hyprctl setcursor --shades true
+
+
+For Flatpak apps (like Firefox or Steam), ensure Wayland support:
+
+flatpak override --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.firefox
+flatpak override --socket=wayland --env=QT_QPA_PLATFORM=wayland org.kde.krita
+
