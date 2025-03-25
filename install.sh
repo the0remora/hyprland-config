@@ -1,35 +1,49 @@
 #!/bin/bash
-clear  # Ensures a clean terminal output
 
-# Define repository and install path
-REPO_URL="https://github.com/the0remora/hyprland-config.git"
-CONFIG_DIR="$HOME/.config"
+# Hyprland Installation Script
 
-# Install dependencies
-echo "Installing dependencies..."
-yay -S --noconfirm hyprland waybar wofi hyprpaper hyprshade
+# Function to check if a package is installed
+is_installed() {
+    pacman -Q $1 &>/dev/null
+}
 
-# Clone the dotfiles repo
-echo "Cloning Hyprland configuration..."
-if [ ! -d "$CONFIG_DIR/hypr" ]; then
-    git clone "$REPO_URL" "$CONFIG_DIR/hyprland-setup"
-else
-    echo "Config already exists. Pulling latest updates..."
-    cd "$CONFIG_DIR/hyprland-setup" && git pull
-fi
+echo "Updating system..."
+yay -Syu --noconfirm || { echo "Failed to update system"; exit 1; }
 
-# Move configuration files
-echo "Deploying configuration..."
-mv -n "$CONFIG_DIR/hyprland-setup/hypr" "$CONFIG_DIR/"
-mv -n "$CONFIG_DIR/hyprland-setup/waybar" "$CONFIG_DIR/"
-mv -n "$CONFIG_DIR/hyprland-setup/wofi" "$CONFIG_DIR/"
-mv -n "$CONFIG_DIR/hyprland-setup/wallpapers" "$CONFIG_DIR/"
+# Install required packages
+PACKAGES=(
+    "hyprland"
+    "waybar"
+    "rofi"
+    "foot"
+    "thunar"
+    "swaync"
+    "hyprpaper"
+    "hyprshade"
+)
 
-# Enable Hyprshade
-echo "Enabling Hyprshade..."
-hyprctl setcursor --shades true
+echo "Installing necessary packages..."
+for PKG in "${PACKAGES[@]}"; do
+    if is_installed $PKG; then
+        echo "$PKG is already installed."
+    else
+        yay -S --noconfirm $PKG || { echo "Failed to install $PKG"; exit 1; }
+    fi
+done
 
-# Clean up
-rm -rf "$CONFIG_DIR/hyprland-setup"
+# Backup existing Hyprland config
+CONFIG_DIR="$HOME/.config/hypr"
+mkdir -p "$CONFIG_DIR"
 
-echo "Setup complete! Restart Hyprland to apply changes."
+for FILE in hyprland.conf monitors.conf env.conf; do
+    if [ -f "$CONFIG_DIR/$FILE" ]; then
+        mv "$CONFIG_DIR/$FILE" "$CONFIG_DIR/$FILE.bak"
+        echo "Backed up existing $FILE"
+    fi
+done
+
+# Copy new configuration
+echo "Deploying new Hyprland configuration..."
+cp hyprland.conf monitors.conf env.conf "$CONFIG_DIR/"
+
+echo "Installation complete! Restart Hyprland to apply changes."
