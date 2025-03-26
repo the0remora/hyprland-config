@@ -16,6 +16,6 @@ This repository contains my customized **Hyprland** configuration files, fine-tu
 Run the following commands to install the configuration:  
 
 ```sh
-git clone https://github.com/the0remora/hyprland-config.git ~/.config/hyprland-config
+git clone --branch Darth-Zannah https://github.com/the0remora/hyprland-config.git ~/.config/hyprland-config
 cd ~/.config/hyprland-config
 bash install.sh
